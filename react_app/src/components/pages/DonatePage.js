@@ -45,7 +45,7 @@ class DonatePage extends React.Component {
       
           }
         return (
-            
+            <div>
             <Form onSubmit={this.onSubmit} style={formStyle}>
             
             <div> Your balance: {this.state.data.balance} ETH</div>
@@ -58,8 +58,9 @@ class DonatePage extends React.Component {
             />ETH
             {errors.amount && <InlineError text={errors.amount} />}
             </Form.Field>
-            <Link to="/"> <Button primary>Donate</Button></Link>
+            <Link to="/success"> <Button primary>Donate</Button></Link>
             </Form>
+            </div>
           
         )
     }

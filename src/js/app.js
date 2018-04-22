@@ -1,9 +1,9 @@
 App = {
   web3Provider: null,
   contracts: {},
-
+//init templates for voting causes
   init: function() {
-    // Load pets.
+    // Load causes.
     $.getJSON('../causes.json', function(data) {
       var causesRow = $('#causesRow');
       var causeTemplate = $('#causeTemplate');
@@ -37,6 +37,7 @@ web3 = new Web3(App.web3Provider);
     return App.initContract();
   },
 
+//Belows are functions related to contract
   initContract: function() {
     $.getJSON('Adoption.json', function(data) {
   // Get the necessary contract artifact file and instantiate it with truffle-contract

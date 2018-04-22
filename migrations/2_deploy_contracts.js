@@ -1,5 +1,5 @@
-var Adoption = artifacts.require("./charity.sol");
+var Charity = artifacts.require("./Charity.sol");
 
 module.exports = function(deployer) {
-    deployer.deploy(Charity);
+    deployer.deploy(Charity("Test Charity"));
 };

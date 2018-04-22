@@ -12,13 +12,15 @@ contract Charity {
 
     uint public endTime;
 
+    event charityCreated(address creator);
     event optionAdded(string option, address optionAddress);
     event donated(address donor, uint donationAmount);
 
     // Constructor
-    function Charity(string _name) public {
-        name = _name;
+    function Charity() public {
+        name = "Test Charity";
         creator = msg.sender;
+        emit charityCreated(creator);
 
         endTime = 2**256 - 1;
     }

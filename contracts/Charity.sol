@@ -1,4 +1,5 @@
 pragma solidity ^0.4.18;
+
 contract Charity {
 
     string public name;
@@ -15,8 +16,8 @@ contract Charity {
     event donated(address donor, uint donationAmount);
 
     // Constructor
-    function Charity(string _name) public {
-        name = _name;
+    function Charity() public {
+        name = "Test Charity";
         creator = msg.sender;
 
         endTime = 2**256 - 1;

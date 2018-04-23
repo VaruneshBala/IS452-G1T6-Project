@@ -39,67 +39,50 @@ web3 = new Web3(App.web3Provider);
 
 //Belows are functions related to contract
   initContract: function() {
-    $.getJSON('Adoption.json', function(data) {
+    $.getJSON('Charity.json', function(data) {
   // Get the necessary contract artifact file and instantiate it with truffle-contract
-  var AdoptionArtifact = data;
-  App.contracts.Adoption = TruffleContract(AdoptionArtifact);
+  var CharityArtifact = data;
+  App.contracts.Charity = TruffleContract(CharityArtifact);
 
   // Set the provider for our contract
-  App.contracts.Adoption.setProvider(App.web3Provider);
+  App.contracts.Charity.setProvider(App.web3Provider);
 
-  // Use our contract to retrieve and mark the adopted pets
-  return App.markAdopted();
+   //Do we need to return?
+   return App.refresh();
 });
 
     return App.bindEvents();
   },
 
+//after clicking on vote
   bindEvents: function() {
-    $(document).on('click', '.btn-adopt', App.handleAdopt);
+    $(document).on('click', '.btn-vote', App.handleVote);
   },
-
-  markAdopted: function(adopters, account) {
-  var adoptionInstance;
-
-  App.contracts.Adoption.deployed().then(function(instance) {
-    adoptionInstance = instance;
-
-    return adoptionInstance.getAdopters.call();
-  }).then(function(adopters) {
-    for (i = 0; i < adopters.length; i++) {
-      //Ethereum initializes the array with 16 empty addresses; that's why we check for empty address instead of null/false
-      if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
-        $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
-      }
-    }
-  }).catch(function(err) {
-    console.log(err.message);
-  });
-  },
-
-  handleAdopt: function(event) {
+  
+  handleVote: function(event) {
+    //if this method is called, the default action of the event will not be triggered
     event.preventDefault();
 
-    var petId = parseInt($(event.target).data('id'));
+    //event.target is button with data-id for a given cause
+    var causeId = parseInt($(event.target).data('id'));
 
-    var adoptionInstance;
+    var votingInstance;
 
- //use web3 to get the user's accounts
+ //use web3 to get the user's accounts: what accounts?
   web3.eth.getAccounts(function(error, accounts) {
   if (error) {
     console.log(error);
   }
 
-  var account = accounts[0];
+  var account = accounts[0]; //how to refer to the user account
 
-  App.contracts.Adoption.deployed().then(function(instance) {
-    adoptionInstance = instance;
-
-    // Execute adopt as a transaction by sending account
-    return adoptionInstance.adopt(petId, {from: account});
+  App.contracts.Charity.deployed().then(function(instance) {
+    votingInstance = instance;
+    // Execute voting as a transaction by sending account
+    return votingInstance.vote(causeId);
   }).then(function(result) {
-    //sync the UI with our newly stored data
-    return App.markAdopted();
+    //after successfully calling vote function in contract, sync the UI with our newly stored data
+  $('.panel-vote').eq(causeId).find('button').text('Success').attr('disabled', true);
   }).catch(function(err) {
     console.log(err.message);
   });

@@ -1,0 +1,27 @@
+{
+  "name": "blockchains-project",
+  "version": "1.0.0",
+  "description": "Xueshan (Jessie) Bai, William Sun, Xi (Stanley) Wang, and Elaine Wong",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wsun19/Blockchains-Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wsun19/Blockchains-Project/issues"
+  },
+  "homepage": "https://github.com/wsun19/Blockchains-Project#readme",
+  "dependencies": {
+    "chai": "^4.1.2",
+    "ganache-cli": "^6.1.0",
+    "truffle": "^4.1.7"
+  }
+}

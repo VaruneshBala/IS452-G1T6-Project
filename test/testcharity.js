@@ -29,9 +29,19 @@ contract("Test Charity", function(accounts) {
             });
         });
         it("non-creator cannot add new charity", function() {
-            testContract.addVoteOption("RedCross", "0x2000000000000000000000000000000000000000", {from: accounts[1]});
+            testContract.addVoteOption("RedCross", "0x2000000000000000000000000000000000000000",
+                                       {from: accounts[1]});
             return testContract.votingOptionsCount().then(function(res) {
                 expect(res.toString()).to.be.equal("1");
+            });
+        });
+        it("donations go to correct address", function() {
+            testContract.donate({from: accounts[1], value: 100});
+            testContract.getBalance().then(function(res) {
+                expect(res.toString()).to.be.equal("100");
+            });
+            return testContract.donations(accounts[1]).then(function(res) {
+                expect(res.toString()).to.be.equal("100");
             });
         });
         it("voting cannot proceed without creator calling startVoting", function() {
@@ -39,7 +49,7 @@ contract("Test Charity", function(accounts) {
             testContract.vote(0, {from: accounts[1]});
             return testContract.votingOptionVotes(0).then(function(res) {
                 expect(res.toString()).to.be.equal("0");
-            })
-        })
+            });
+        });
     });
 });

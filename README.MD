@@ -2,12 +2,8 @@
 Xueshan (Jessie) Bai, William Sun, Xi (Stanley) Wang, and Elaine Wong
 
 ## Testing
-To run the Truffle tests, first install the following libraries using npm:
-```
-npm install -g truffle
-npm install -g ganache-cli
-npm install -g chai
-```
+To run the Truffle tests, first install the node dependencies using `npm install` in the root project directory.
+
 Then, compile the smart contracts using `truffle compile`.
 
 In a new terminal window, run `ganache-cli -p=7545` to start the dummy blockchain. You can also download the Ganache GUI [here](http://truffleframework.com/ganache) and start it up.

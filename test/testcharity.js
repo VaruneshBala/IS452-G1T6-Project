@@ -19,7 +19,7 @@ contract("Test Charity", function(accounts) {
     });
 
     describe("Testing charity functions", function() {
-        it("creator can add WWF as first charity", function() {
+        it("creator can add new charity", function() {
             testContract.addVoteOption("WWF", "0x1000000000000000000000000000000000000000");
             testContract.votingOptions(0).then(function(res) {
                 expect(res.toString()).to.be.equal("WWF");

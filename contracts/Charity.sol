@@ -69,7 +69,7 @@ contract Charity {
         // https://ethereum.stackexchange.com/questions/3373/how-to-clear-large-arrays-without-blowing-the-gas-limit
         if (now >= endTime) {
             uint maxVotes = 0;
-            uint maxIndex = 2 ** 256 - 1;
+            uint maxIndex = 2**256 - 1;
             for (uint i = 0; i < votingOptionsCount; i++) {
                 if (votingOptionVotes[i] > maxVotes) {
                     maxIndex = i;
@@ -77,9 +77,9 @@ contract Charity {
                 }
             }
             votingOptionsCount = 0;
-            startTime = 2 ** 256 - 1;
-            endTime = 2 ** 256 - 1;
-            if (maxIndex == 2 ** 256 - 1) {
+            startTime = 2**256 - 1;
+            endTime = 2**256 - 1;
+            if (maxIndex == 2**256 - 1) {
                 // TODO: Handle case where no one voted
             } else {
                 votingOptionAddresses[maxIndex].transfer(address(this).balance);

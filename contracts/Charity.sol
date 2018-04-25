@@ -42,9 +42,8 @@ contract Charity {
 
     // Locks in the options and allows donors to start voting
     // @param duration: time that voting will be allowed, in seconds
-    // Confirmed it's seconds
     function startVoting(uint duration) public {
-        if (msg.sender == creator && now < endTime) {
+        if (msg.sender == creator && startTime == 2**256 - 1 && now < endTime) {
             startTime = now;
             endTime = now + duration;
         }
@@ -57,7 +56,7 @@ contract Charity {
             msg.sender.transfer(donations[msg.sender]);
         }
     }
-    
+
     // Allows one to vote for one of the choices, which will be weighted; remove voter's balance
     // @param option: the index of the option to vote for
     function vote(uint option) public {

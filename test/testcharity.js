@@ -22,7 +22,8 @@ contract("Test Charity", function(accounts) {
         it("creator can add new charity", function() {
             testContract.addVoteOption("WWF", "0x1000000000000000000000000000000000000000");
             testContract.votingOptions(0).then(function(res) {
-                expect(res.toString()).to.be.equal("WWF");
+                expect(res.toString()).to.be.equal(
+                    "0x5757460000000000000000000000000000000000000000000000000000000000");
             });
             return testContract.votingOptionAddresses(0).then(function(res) {
                 expect(res.toString()).to.be.equal("0x1000000000000000000000000000000000000000");

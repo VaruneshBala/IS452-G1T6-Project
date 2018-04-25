@@ -58,7 +58,7 @@ web3 = new Web3(App.web3Provider);
   bindEvents: function() {
     $(document).on('click', '.btn-vote', App.handleVote);
   },
-  
+
   handleVote: function(event) {
     //if this method is called, the default action of the event will not be triggered
     event.preventDefault();
@@ -79,7 +79,8 @@ web3 = new Web3(App.web3Provider);
   App.contracts.Charity.deployed().then(function(instance) {
     votingInstance = instance;
     // Execute voting as a transaction by sending account
-    return votingInstance.vote(causeId);
+    // TODO: Add index number
+    return votingInstance.vote();
   }).then(function(result) {
     //after successfully calling vote function in contract, sync the UI with our newly stored data
   $('.panel-vote').eq(causeId).find('button').text('Success').attr('disabled', true);

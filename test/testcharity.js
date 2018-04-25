@@ -22,7 +22,7 @@ contract("Test Charity", function(accounts) {
         it("creator can add new charity", function() {
             // Let accounts[2] be the "WWF" address
             testContract.getAccountBalance(accounts[2]).then(function(res) {
-                originalBalance = res.toString();
+                originalBalance = parseFloat(res.toString());
             });
             testContract.addVoteOption("WWF", accounts[2]);
             testContract.votingOptions(0).then(function(res) {
@@ -79,10 +79,7 @@ contract("Test Charity", function(accounts) {
             }
             testContract.disperse();
             testContract.getAccountBalance(accounts[2]).then(function(res) {
-                // this will fail every 10 runs when the last 3 digits are 900 lol
-                expect(res.toString()).to.be.equal(originalBalance.substr(0,
-                    originalBalance.length - 3) +
-                    (parseInt(originalBalance.substr(originalBalance.length - 3)) + 100));
+                expect(parseFloat(res.toString())).to.be.equal(originalBalance + 100);
             });
             return testContract.getBalance().then(function(res) {
                 expect(res.toString()).to.be.equal("0");

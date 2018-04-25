@@ -78,6 +78,31 @@ web3 = new Web3(App.web3Provider);
    //if this method is called, the default action of the event will not be triggered
    event.preventDefault();
 
+   var value=document.getElementById("amount").value;
+
+   web3.eth.getAccounts(function(error, accounts) {
+   if (error) {
+     console.log(error);
+   }
+
+   var account = accounts[0]; //how to refer to the user account
+
+   App.contracts.Charity.deployed().then(function(instance) {
+     votingInstance = instance;
+     // Execute voting as a transaction by sending account
+     votingInstance.donate({toAddress:this}, {value: value}, {from: account})
+     .then(function() {
+       console.log("success")
+     });
+   }).then(function(result) {
+     //after successfully calling vote function in contract, sync the UI with our newly stored data
+   $('.btn-donate').text('Success').attr('disabled', true);
+   }).catch(function(err) {
+     console.log(err.message);
+   });
+ });
+
+
  },
 
 

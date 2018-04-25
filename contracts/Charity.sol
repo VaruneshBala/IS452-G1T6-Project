@@ -4,14 +4,14 @@ contract Charity {
 
     address public creator; // TODO: multiple creators/admins?
     mapping (address => uint) public donations; // TODO: make it easier to see everyone's donations
-    string[] public votingOptions;  // TODO: Convert to bytes32
+    bytes32[] public votingOptions;  // TODO: Convert to bytes32
     address[] public votingOptionAddresses;
     uint[] public votingOptionVotes;
     uint public votingOptionsCount;
     uint public startTime;
     uint public endTime;
 
-    event optionAdded(string option, address optionAddress);
+    event optionAdded(bytes32 option, address optionAddress);
     event donated(address donor, uint donationAmount);
 
     // Constructor
@@ -24,7 +24,7 @@ contract Charity {
     // The creator can add voting options before voting starts
     // @param option: the name of the charity being added
     // @param address: the address of the charity's wallet
-    function addVoteOption(string option, address optionAddress) public {
+    function addVoteOption(bytes32 option, address optionAddress) public {
         if (msg.sender == creator && startTime == (2**256 - 1)) {
             // TODO: Make this less susceptible to gas attacks; we need a max # of charities
             if (votingOptions.length <= votingOptionsCount) {
@@ -42,7 +42,7 @@ contract Charity {
 
     // Locks in the options and allows donors to start voting
     // @param duration: time that voting will be allowed, in seconds
-    // TODO: confirm it's seconds
+    // Confirmed it's seconds
     function startVoting(uint duration) public {
         if (msg.sender == creator && now < endTime) {
             startTime = now;
@@ -50,6 +50,14 @@ contract Charity {
         }
     }
 
+    // If one donates money but hasn't voted, he/she can reclaim money back.
+    function returnDonation() public {
+        if (donations[msg.sender] > 0) {
+            donations[msg.sender] = 0;
+            msg.sender.transfer(donations[msg.sender]);
+        }
+    }
+    
     // Allows one to vote for one of the choices, which will be weighted; remove voter's balance
     // @param option: the index of the option to vote for
     function vote(uint option) public {
@@ -80,7 +88,7 @@ contract Charity {
             startTime = 2**256 - 1;
             endTime = 2**256 - 1;
             if (maxIndex == 2**256 - 1) {
-                // TODO: Handle case where no one voted
+                return false; //no one voted
             } else {
                 votingOptionAddresses[maxIndex].transfer(address(this).balance);
             }
@@ -101,7 +109,7 @@ contract Charity {
 
     // Get which charity is at a certain index
     // @param index: the index of the voting option
-    function getVotingOption (uint index) public constant returns (string, address) {
+    function getVotingOption (uint index) public constant returns (bytes32, address) {
         if (index < votingOptionsCount) {
             return (votingOptions[index], votingOptionAddresses[index]);
         } else {

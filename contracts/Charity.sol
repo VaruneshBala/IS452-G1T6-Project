@@ -81,6 +81,7 @@ contract Charity {
                 if (votingOptionVotes[i] > maxVotes) {
                     maxIndex = i;
                     maxVotes = votingOptionVotes[i];
+                    votingOptionVotes[i] = 0;
                 }
             }
             votingOptionsCount = 0;
@@ -115,4 +116,8 @@ contract Charity {
             return ("null", 0);
         }
     }
+
+    function getAccountBalance(address addr) public view returns(uint) {
+		return addr.balance;
+	}
 }

@@ -46,17 +46,40 @@ web3 = new Web3(App.web3Provider);
 
   // Set the provider for our contract
   App.contracts.Charity.setProvider(App.web3Provider);
-
+  App.initialize();
 
 });
 
     return App.bindEvents();
   },
 
-//after clicking on vote
+  initialize: function() {
+    //use web3 to get the user's accounts: what accounts?
+     web3.eth.getAccounts(function(error, accounts) {
+     if (error) {
+       console.log(error);
+     }
+     web3.eth.getBalance(accounts[0],function(error, balance) {
+      $("#balance").text("Your balance: "+web3.fromWei(balance, "ether")+" BTH");
+})
+
+     })
+
+
+  },
+
+//after clicking on vote or donate
   bindEvents: function() {
+    $(document).on('click', '.btn-donate', App.handleDonate);
     $(document).on('click', '.btn-vote', App.handleVote);
   },
+
+ handleDonate: function(event) {
+   //if this method is called, the default action of the event will not be triggered
+   event.preventDefault();
+
+ },
+
 
   handleVote: function(event) {
     //if this method is called, the default action of the event will not be triggered
@@ -67,7 +90,7 @@ web3 = new Web3(App.web3Provider);
 
     var votingInstance;
 
- //use web3 to get the user's accounts: what accounts?
+ //use web3 to get the user's accounts:
   web3.eth.getAccounts(function(error, accounts) {
   if (error) {
     console.log(error);

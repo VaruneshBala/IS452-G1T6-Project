@@ -18,7 +18,7 @@ contract("Test Charity", function(accounts) {
         });
     });
 
-    describe("Testing charity functions", function() {
+    describe("Testing charity functions (integration)", function() {
         it("creator can add new charity", function() {
             // Let accounts[2] be the "WWF" address
             testContract.getAccountBalance(accounts[2]).then(function(res) {

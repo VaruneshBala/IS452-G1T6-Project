@@ -1,14 +1,14 @@
 App = {
   web3Provider: null,
   contracts: {},
-//init templates for voting causes
+  //init templates for voting causes
   init: function() {
     // Load causes.
     $.getJSON('../causes.json', function(data) {
       var causesRow = $('#causesRow');
       var causeTemplate = $('#causeTemplate');
 
-      for (i = 0; i < data.length; i ++) {
+      for (i = 0; i < data.length; i++) {
         console.log(data[i].name);
 
         causeTemplate.find('.panel-title').text(data[i].name);
@@ -26,49 +26,49 @@ App = {
 
   initWeb3: function() {
     // Is there an injected web3 instance?
-if (typeof web3 !== 'undefined') {
-  App.web3Provider = web3.currentProvider;
-} else {
-  // If no injected web3 instance is detected, fall back to Ganache
-  App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
-}
-web3 = new Web3(App.web3Provider);
+    if (typeof web3 !== 'undefined') {
+      App.web3Provider = web3.currentProvider;
+    } else {
+      // If no injected web3 instance is detected, fall back to Ganache
+      App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
+    }
+    web3 = new Web3(App.web3Provider);
 
     return App.initContract();
   },
 
-//Belows are functions related to contract
+  //Belows are functions related to contract
   initContract: function() {
     $.getJSON('Charity.json', function(data) {
-  // Get the necessary contract artifact file and instantiate it with truffle-contract
-  var CharityArtifact = data;
-  App.contracts.Charity = TruffleContract(CharityArtifact);
+      // Get the necessary contract artifact file and instantiate it with truffle-contract
+      var CharityArtifact = data;
+      App.contracts.Charity = TruffleContract(CharityArtifact);
 
-  // Set the provider for our contract
-  App.contracts.Charity.setProvider(App.web3Provider);
-  App.initialize();
+      // Set the provider for our contract
+      App.contracts.Charity.setProvider(App.web3Provider);
+      App.initialize();
 
-});
+    });
 
     return App.bindEvents();
   },
 
   initialize: function() {
     //use web3 to get the user's accounts: what accounts?
-     web3.eth.getAccounts(function(error, accounts) {
-     if (error) {
-       console.log(error);
-     }
-     web3.eth.getBalance(accounts[0],function(error, balance) {
-      $("#balance").text("Your balance: "+web3.fromWei(balance, "ether")+" ETH");
-})
+    web3.eth.getAccounts(function(error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+      web3.eth.getBalance(accounts[0], function(error, balance) {
+        $("#balance").text("Your balance: " + web3.fromWei(balance, "ether") + " ETH");
+      })
 
-     })
+    })
 
 
   },
 
-//after clicking on vote or donate
+  //after clicking on vote or donate
   bindEvents: function() {
     $(document).on('click', '.btn-donate', App.handleDonate);
     $(document).on('click', '.btn-vote', App.handleVote);
@@ -129,26 +129,26 @@ web3 = new Web3(App.web3Provider);
 
     var votingInstance;
 
- //use web3 to get the user's accounts:
-  web3.eth.getAccounts(function(error, accounts) {
-  if (error) {
-    console.log(error);
-  }
+    //use web3 to get the user's accounts:
+    web3.eth.getAccounts(function(error, accounts) {
+      if (error) {
+        console.log(error);
+      }
 
-  var account = accounts[0]; //how to refer to the user account
+      var account = accounts[0]; //how to refer to the user account
 
-  App.contracts.Charity.deployed().then(function(instance) {
-    votingInstance = instance;
-    // Execute voting as a transaction by sending account
-    votingInstance.addVoteOption("WWF", "0x1000000000000000000000000000000000000000");
-    //votingInstance.vote(0);
-  }).then(function(result) {
-    //after successfully calling vote function in contract, sync the UI with our newly stored data
-  $('.panel-vote').eq(causeId).find('button').text('Success').attr('disabled', true);
-  }).catch(function(err) {
-    console.log(err.message);
-  });
-});
+      App.contracts.Charity.deployed().then(function(instance) {
+        votingInstance = instance;
+        // Execute voting as a transaction by sending account
+        // votingInstance.addVoteOption("WWF", "0x1000000000000000000000000000000000000000");
+        votingInstance.vote(causeId);
+      }).then(function(result) {
+        //after successfully calling vote function in contract, sync the UI with our newly stored data
+        $('.panel-vote').eq(causeId).find('button').text('Success').attr('disabled', true);
+      }).catch(function(err) {
+        console.log(err.message);
+      });
+    });
   },
 
 
@@ -176,72 +176,64 @@ web3 = new Web3(App.web3Provider);
        "description": des
      }
 
-     var fs = require('fs')
 
      document.getElementById("name").value = "";
      document.getElementById("pk").value = "";
      document.getElementById("location").value = "";
      document.getElementById("file").value = "";
 
-     var votingInstance;
 
-     //use web3 to get the user's accounts:
+    var votingInstance;
+
+    //use web3 to get the user's accounts:
     web3.eth.getAccounts(function(error, accounts) {
-       if (error) {
-         console.log(error);
-       }
+      if (error) {
+        console.log(error);
+      }
 
-       var account = accounts[0]; //how to refer to the user account
+      var account = accounts[0]; //how to refer to the user account
 
-       App.contracts.Charity.deployed().then(function(instance) {
-         votingInstance = instance;
-         // Execute voting as a transaction by sending account
-         votingInstance.addVoteOption(name, pk);
-       }).then(function(result) {
-         console.log("Success!!!!!!!!!");
-       }).catch(function(err) {
-         console.log(err.message);
-       });
+      App.contracts.Charity.deployed().then(function(instance) {
+        votingInstance = instance;
+        // Execute voting as a transaction by sending account
+        votingInstance.addVoteOption(name, pk);
+      }).catch(function(err) {
+        console.log(err.message);
+      });
     });
-   },
+  },
 
 
-    handleGetVotingOptions: function(event) {
-      //if this method is called, the default action of the event will not be triggered
-      event.preventDefault();
-      var votingInstance;
+  handleGetVotingOptions: function(event) {
+    //if this method is called, the default action of the event will not be triggered
+    event.preventDefault();
+    var votingInstance;
 
-      //use web3 to get the user's accounts:
-     web3.eth.getAccounts(function(error, accounts) {
-        if (error) {
-          console.log(error);
-        }
+    //use web3 to get the user's accounts:
+    web3.eth.getAccounts(function(error, accounts) {
+      if (error) {
+        console.log(error);
+      }
 
-        var account = accounts[0]; //how to refer to the user account
+      var account = accounts[0]; //how to refer to the user account
 
-        App.contracts.Charity.deployed().then(function(instance) {
-          votingInstance = instance;
-          // Execute voting as a transaction by sending account
-          votingInstance.votingOptionsCount().then(function(result) {
-            console.log("in" + result['c'][0]);
-
-            $("#votingOptionsList").text("");
-            console.log("asdf'd");
-            for (i = 0; i < result['c'][0]; i++) {
-              console.log("in - " + result['c'][0] + " - " + i);
-              votingInstance.getVotingOption(i).then(function(result) {
-                console.log("inner inner " + i);
-                $("#votingOptionsList").html($("#votingOptionsList").html() + result[0] + ", " + result[1] + "<br/>");
-              });
-            }
-          });
-        }).then(function(result) {
-        console.log("Success!");
-        }).catch(function(err) {
-          console.log(err.message);
+      App.contracts.Charity.deployed().then(function(instance) {
+        votingInstance = instance;
+        // Execute voting as a transaction by sending account
+        votingInstance.votingOptionsCount().then(function(result) {
+          $("#votingOptionsList").text("");
+          for (i = 0; i < result['c'][0]; i++) {
+            votingInstance.getVotingOption(i).then(function(result) {
+              console.log(result);
+              $("#votingOptionsList").html($("#votingOptionsList").html() + web3.toAscii(result[0]) + ", " + result[1] + ", " + result[2]['c'][0] + "<br/>");
+            });
+          }
         });
-     });
-    }
+      }).catch(function(err) {
+        console.log(err.message);
+      });
+    });
+  }
 
 };
 

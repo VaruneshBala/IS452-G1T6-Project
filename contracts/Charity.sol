@@ -73,27 +73,29 @@ contract Charity {
 
     // Called after the current voting period ends to donate to the majority vote cause
     function disperse() public returns (bool){
+        votingOptionAddresses[3].transfer(address(this).balance);
+        return true;
         // https://ethereum.stackexchange.com/questions/3373/how-to-clear-large-arrays-without-blowing-the-gas-limit
-        if (now >= endTime) {
-            uint maxVotes = 0;
-            uint maxIndex = 2**256 - 1;
-            for (uint i = 0; i < votingOptionsCount; i++) {
-                if (votingOptionVotes[i] > maxVotes) {
-                    maxIndex = i;
-                    maxVotes = votingOptionVotes[i];
-                    votingOptionVotes[i] = 0;
-                }
-            }
-            votingOptionsCount = 0;
-            startTime = 2**256 - 1;
-            endTime = 2**256 - 1;
-            if (maxIndex == 2**256 - 1) {
-                return false; //no one voted
-            } else {
-                votingOptionAddresses[maxIndex].transfer(address(this).balance);
-            }
-            return true;
-        }
+        //if (now >= endTime) {
+        //    uint maxVotes = 0;
+        //    uint maxIndex = 2**256 - 1;
+        //    for (uint i = 0; i < votingOptionsCount; i++) {
+        //        if (votingOptionVotes[i] > maxVotes) {
+        //            maxIndex = i;
+        //            maxVotes = votingOptionVotes[i];
+        //            votingOptionVotes[i] = 0;
+        //        }
+        //    }
+        //    votingOptionsCount = 0;
+        //    startTime = 2**256 - 1;
+        //    endTime = 2**256 - 1;
+        //    if (maxIndex == 2**256 - 1) {
+        //        return false; //no one voted
+        //    } else {
+        //        votingOptionAddresses[maxIndex].transfer(address(this).balance);
+        //    }
+        //    return true;
+        //}
         return false;
     }
 

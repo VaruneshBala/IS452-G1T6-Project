@@ -15,18 +15,16 @@ App = {
         causeTemplate.find('img').attr('src', data[i].picture);
         causeTemplate.find('.location').text(data[i].location);
         causeTemplate.find('.description').text(data[i].description);
-        causeTemplate.find('.btn-vote').attr('data-id', data[i].id);
 
         causesRow.append(causeTemplate.html());
       }
-       //window.localStorage.clear();
+       // window.localStorage.clear();
        var obj = JSON.parse(localStorage.getItem('myStorage'));
        causeTemplate.find('.panel-title').text(obj.name);
        causeTemplate.find('img').attr('src', obj.picture);
        causeTemplate.find('.location').text(obj.location);
        causeTemplate.find('.description').text(obj.description);
-       causeTemplate.find('.btn-vote').attr('data-id', 4);
-      causesRow.append(causeTemplate.html());
+        causesRow.append(causeTemplate.html());
 
 
     });
@@ -58,6 +56,13 @@ App = {
       App.contracts.Charity.setProvider(App.web3Provider);
       App.initialize();
 
+      App.contracts.Charity.deployed().then(function(instance) {
+        votingInstance = instance;
+        // Populate default charities
+      }).catch(function(err) {
+        console.log(err.message);
+      });
+
     });
 
     return App.bindEvents();
@@ -80,6 +85,10 @@ App = {
         var account = accounts[0]; //how to refer to the user account
 
         App.contracts.Charity.deployed().then(function(instance) {
+          votingInstance.endTime().then(function(result) {
+
+            console.log(result);
+          });
 
           votingInstance = instance;
           // Execute voting as a transaction by sending account
@@ -103,10 +112,11 @@ App = {
   bindEvents: function() {
     $(document).on('click', '.btn-donate', App.handleDonate);
     $(document).on('click', '.btn-vote', App.handleVote);
-    // $(document).on('click', '.btn-create', App.handleCreateContract)
+    $(document).on('click', '.btn-create', App.handleCreateContract)
     $(document).on('click', '.btn-addVotingOption', App.handleAddVotingOption)
     $(document).on('click', '.btn-getVotingOptions', App.handleGetVotingOptions)
     $(document).on('click', '.btn-startVoting', App.handleStartVoting)
+    $(document).on('click', '.btn-disperse', App.handleDisperse)
   },
 
  handleDonate: function(event) {
@@ -283,7 +293,61 @@ App = {
       App.contracts.Charity.deployed().then(function(instance) {
         votingInstance = instance;
         // Execute voting as a transaction by sending account
-        votingInstance.startVoting(4000); //TODO make the duration a text box to set
+        votingInstance.startVoting(30); //TODO make the duration a text box to set
+      }).catch(function(err) {
+        console.log(err.message);
+      });
+    });
+  },
+
+
+  handleCreateContract: function(event) {
+    //if this method is called, the default action of the event will not be triggered
+    console.log("Here");
+    event.preventDefault();
+    var votingInstance;
+
+
+    App.contracts.Charity.deployed().then(function(instance) {
+      votingInstance = instance;
+      votingInstance.addVoteOption("LovePanda", 0x92015c09275f6eb2ac347a84f01e9d0147dd15e5);
+      votingInstance.addVoteOption("HeartBeat", 0x7849ffda2c0bc921d875251a69a69c9653366c00);
+      votingInstance.addVoteOption("VAD", 0x852df30ae98e7a95edc5bb268f27ccbf40f1d1ff);
+    }).catch(function(err) {
+      console.log(err.message);
+    });
+
+  },
+
+
+  handleDisperse: function(event) {
+    //if this method is called, the default action of the event will not be triggered
+    event.preventDefault();
+    var votingInstance;
+
+    //use web3 to get the user's accounts:
+    web3.eth.getAccounts(function(error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+      // web3.eth.sendTransaction({from:accounts[0], to: "0xa753e76d6F3e02Df816267f6b07Cc3F14AB41dEb", value: 2000000000000000000}, function(err, result) {
+      //   if (!err) {
+      //     console.log("result" + result);
+      //   } else {
+      //     console.log("err" + err);
+      //   }
+      // });
+
+      App.contracts.Charity.deployed().then(function(instance) {
+        console.log("about to call");
+        votingInstance = instance;
+        console.log("about to disperse");
+        votingInstance.disperse().then(function(result) {
+          console.log("result" + result);
+        }).catch(function(err) {
+          console.log("err" + err);
+        });
+        console.log("after disperse");
       }).catch(function(err) {
         console.log(err.message);
       });

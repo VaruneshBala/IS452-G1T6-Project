@@ -109,11 +109,11 @@ contract Charity {
 
     // Get which charity is at a certain index
     // @param index: the index of the voting option
-    function getVotingOption (uint index) public constant returns (bytes32, address) {
+    function getVotingOption (uint index) public constant returns (bytes32, address, uint) {
         if (index < votingOptionsCount) {
-            return (votingOptions[index], votingOptionAddresses[index]);
+            return (votingOptions[index], votingOptionAddresses[index], votingOptionVotes[index]);
         } else {
-            return ("null", 0);
+            return ("null", 0, 0);
         }
     }
 

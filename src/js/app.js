@@ -146,8 +146,8 @@ App = {
       App.contracts.Charity.deployed().then(function(instance) {
         votingInstance = instance;
         // Execute voting as a transaction by sending account
-        votingInstance.addVoteOption("WWF", "0x1000000000000000000000000000000000000000");
-        //votingInstance.vote(0);
+        // votingInstance.addVoteOption("WWF", "0x1000000000000000000000000000000000000000");
+        votingInstance.vote(causeId);
       }).then(function(result) {
         //after successfully calling vote function in contract, sync the UI with our newly stored data
         $('.panel-vote').eq(causeId).find('button').text('Success').attr('disabled', true);
@@ -211,7 +211,8 @@ App = {
           $("#votingOptionsList").text("");
           for (i = 0; i < result['c'][0]; i++) {
             votingInstance.getVotingOption(i).then(function(result) {
-              $("#votingOptionsList").html($("#votingOptionsList").html() + result[0] + ", " + result[1] + "<br/>");
+              console.log(result);
+              $("#votingOptionsList").html($("#votingOptionsList").html() + web3.toAscii(result[0]) + ", " + result[1] + ", " + result[2]['c'][0] + "<br/>");
             });
           }
         });

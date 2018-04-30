@@ -82,7 +82,6 @@ web3 = new Web3(App.web3Provider);
    event.preventDefault();
    //get the input value from donator
    var amount=document.getElementById("amount").value;
-   console.log(amount);
    //get account
    web3.eth.getAccounts(function(error, accounts) {
    if (error) {
@@ -93,8 +92,7 @@ web3 = new Web3(App.web3Provider);
    var balance = web3.fromWei(balance, "ether").toNumber();
    console.log(balance)
    if(amount > balance) //if donation amount exceeds account getBalance
-   { console.log("hi")
-     alert("Not enough balance");
+   { alert("Not enough balance");
    } else {//donate
 
      App.contracts.Charity.deployed().then(function(instance) {
@@ -161,11 +159,29 @@ web3 = new Web3(App.web3Provider);
      // var causeAddress = parseInt($(event.target).data('id'));
      var name=document.getElementById("name").value;
      var pk= "\"" + document.getElementById("pk").value + "\"";
+     var location = document.getElementById("location").value;
+     var image = document.getElementById("file").value;
+     var des = document.getElementById("des").value;
      console.log(name);
      console.log(pk);
+     console.log(location);
+     console.log(image);
+     console.log(des);
+
+     var object = {
+       "id": 4,
+       "name": name,
+       "picture": image,
+       "location": location,
+       "description": des
+     }
+
+     var fs = require('fs')
+
      document.getElementById("name").value = "";
      document.getElementById("pk").value = "";
-
+     document.getElementById("location").value = "";
+     document.getElementById("file").value = "";
 
      var votingInstance;
 

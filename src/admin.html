@@ -37,16 +37,21 @@
           <hr/>
         </div>
       </div>
-      <form class="form-horizontal col-md-4 col-md-offset-4" action="/action_page.php">
+      <div class="row text-center" id="balance" style="font-size: 2rem">
+        Your balance:
+      </div>
+      <br>
+      <br>
+      <form class="form-horizontal col-md-4 col-md-offset-4">
         <div class="row text-center" style="font-size: 2rem">
           Create a contract
         </div>
       </form>
       <br>
       <br>
-      <form class="form-horizontal col-md-4 col-md-offset-4" action="/action_page.php">
+      <form class="form-horizontal col-md-4 col-md-offset-4">
         <div class="form-group" style="text-align: center">
-          <button type="submit" class="btn btn-default">Create</button>
+          <button type="submit" class="btn btn-default btn-create">Create</button>
         </div>
         <hr/>
       </form>
@@ -56,22 +61,22 @@
         Add a Voting Option
       </div>
       <br>
-      <form class="form-horizontal col-md-4 col-md-offset-4" action="/action_page.php">
+      <form class="form-horizontal col-md-4 col-md-offset-4">
         <div class="form-group">
           <label class="control-label col-sm-2" for="amount">Name:</label>
           <div class="col-sm-10">
             <!-- TODO find out what the proper max length is for string -> bytes32 -->
-            <input type="text" maxlength="8" class="form-control" id="amount" placeholder="Name of charity">
+            <input type="text" maxlength="8" class="form-control" id="name" placeholder="Name of charity">
           </div>
         </div>
         <div class="form-group">
           <label class="control-label col-sm-2" for="sk">Address:</label>
           <div class="col-sm-10">
-            <input type="text" maxlength="34" class="form-control" id="sk" placeholder="Address of charity">
+            <input type="text" maxlength="42" class="form-control" id="pk" placeholder="Address of charity">
           </div>
         </div>
           <div class="form-group" style="text-align: center">
-            <button type="submit" class="btn btn-default">Add</button>
+            <button type="submit" class="btn btn-default btn-addVotingOption">Add</button>
           </div>
           <hr/>
       </form>
@@ -81,11 +86,16 @@
         Get Voting Options
       </div>
       <br>
-      <form class="form-horizontal col-md-4 col-md-offset-4" action="/action_page.php">
+      <form class="form-horizontal col-md-4 col-md-offset-4">
         <div class="form-group" style="text-align: center">
-          <button type="submit" class="btn btn-default">Get</button>
+          <button type="submit" class="btn btn-default btn-getVotingOptions">Get</button>
         </div>
       </form>
+      <br>
+    </div>
+    <div class="container">
+      <div class="row text-center" style="font-size: 2rem" id="votingOptionsList">
+      </div>
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

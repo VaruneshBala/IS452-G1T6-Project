@@ -19,6 +19,16 @@ App = {
 
         causesRow.append(causeTemplate.html());
       }
+       //window.localStorage.clear();
+       var obj = JSON.parse(localStorage.getItem('myStorage'));
+       causeTemplate.find('.panel-title').text(obj.name);
+       causeTemplate.find('img').attr('src', obj.picture);
+       causeTemplate.find('.location').text(obj.location);
+       causeTemplate.find('.description').text(obj.description);
+       causeTemplate.find('.btn-vote').attr('data-id', 4);
+      causesRow.append(causeTemplate.html());
+
+
     });
 
     return App.initWeb3();
@@ -158,15 +168,10 @@ App = {
      // var causeName = parseInt($(event.target).data('id'));
      // var causeAddress = parseInt($(event.target).data('id'));
      var name=document.getElementById("name").value;
-     var pk= "\"" + document.getElementById("pk").value + "\"";
+     var pk=document.getElementById("pk").value;
      var location = document.getElementById("location").value;
      var image = document.getElementById("file").value;
      var des = document.getElementById("des").value;
-     console.log(name);
-     console.log(pk);
-     console.log(location);
-     console.log(image);
-     console.log(des);
 
      var object = {
        "id": 4,
@@ -175,6 +180,9 @@ App = {
        "location": location,
        "description": des
      }
+
+
+     localStorage.setItem('myStorage', JSON.stringify(object));
 
 
      document.getElementById("name").value = "";

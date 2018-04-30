@@ -81,8 +81,7 @@ web3 = new Web3(App.web3Provider);
    //if this method is called, the default action of the event will not be triggered
    event.preventDefault();
 
-   var value=document.getElementById("amount").value;
-
+   var amount=document.getElementById("amount").value;
    web3.eth.getAccounts(function(error, accounts) {
    if (error) {
      console.log(error);
@@ -93,9 +92,13 @@ web3 = new Web3(App.web3Provider);
    App.contracts.Charity.deployed().then(function(instance) {
      votingInstance = instance;
      // Execute voting as a transaction by sending account
-     votingInstance.donate({toAddress:this}, {value: value}, {from: account})
+     var value= web3.toWei(amount, "ether");
+     votingInstance.donate({from: account, value: value})
      .then(function() {
-       console.log("success")
+       //check the charity balance
+       votingInstance.getBalance().then(function(res) {
+           console.log(res.toString())
+       });
      });
    }).then(function(result) {
      //after successfully calling vote function in contract, sync the UI with our newly stored data
@@ -130,7 +133,7 @@ web3 = new Web3(App.web3Provider);
     votingInstance = instance;
     // Execute voting as a transaction by sending account
     votingInstance.addVoteOption("WWF", "0x1000000000000000000000000000000000000000");
-    votingInstance.vote(0);
+    //votingInstance.vote(0);
   }).then(function(result) {
     //after successfully calling vote function in contract, sync the UI with our newly stored data
   $('.panel-vote').eq(causeId).find('button').text('Success').attr('disabled', true);

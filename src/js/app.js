@@ -80,41 +80,52 @@ App = {
   handleDonate: function(event) {
     //if this method is called, the default action of the event will not be triggered
     event.preventDefault();
-
+    //get the input value from donator
     var amount = document.getElementById("amount").value;
+    console.log(amount);
+    //get account
     web3.eth.getAccounts(function(error, accounts) {
       if (error) {
         console.log(error);
       }
+      //get account balance
+      web3.eth.getBalance(accounts[0], function(error, balance) {
+        var balance = web3.fromWei(balance, "ether").toNumber();
+        console.log(balance)
+        if (amount > balance) //if donation amount exceeds account getBalance
+        {
+          console.log("hi")
+          alert("Not enough balance");
+        } else { //donate
 
-      var account = accounts[0]; //how to refer to the user account
-
-      App.contracts.Charity.deployed().then(function(instance) {
-        votingInstance = instance;
-        // Execute voting as a transaction by sending account
-        var value = web3.toWei(amount, "ether");
-        votingInstance.donate({
-            from: account,
-            value: value
-          })
-          .then(function() {
-            //check the charity balance
-            votingInstance.getBalance().then(function(res) {
-              console.log(res.toString())
-            });
+          App.contracts.Charity.deployed().then(function(instance) {
+            votingInstance = instance;
+            //convert ether to wei
+            var value = web3.toWei(amount, "ether");
+            votingInstance.donate({
+                from: accounts[0],
+                value: value
+              })
+              .then(function() {
+                //check the charity balance
+                votingInstance.getBalance().then(function(res) {
+                  console.log(res.toString())
+                });
+              });
+          }).then(function(result) {
+            //after successfully calling vote function in contract, sync the UI with our newly stored data
+            $('.btn-donate').text('Success').attr('disabled', true);
+          }).catch(function(err) {
+            console.log(err.message);
           });
-      }).then(function(result) {
-        //after successfully calling vote function in contract, sync the UI with our newly stored data
-        $('.btn-donate').text('Success').attr('disabled', true);
-      }).catch(function(err) {
-        console.log(err.message);
-      });
+        }
+      })
+
     });
 
 
   },
 
-  // #TODO make this actually vote, based on an option
   handleVote: function(event) {
     //if this method is called, the default action of the event will not be triggered
     event.preventDefault();

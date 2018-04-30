@@ -60,7 +60,7 @@ web3 = new Web3(App.web3Provider);
        console.log(error);
      }
      web3.eth.getBalance(accounts[0],function(error, balance) {
-      $("#balance").text("Your balance: "+web3.fromWei(balance, "ether")+" BTH");
+      $("#balance").text("Your balance: "+web3.fromWei(balance, "ether")+" ETH");
 })
 
      })
@@ -72,6 +72,9 @@ web3 = new Web3(App.web3Provider);
   bindEvents: function() {
     $(document).on('click', '.btn-donate', App.handleDonate);
     $(document).on('click', '.btn-vote', App.handleVote);
+    // $(document).on('click', '.btn-create', App.handleCreateContract)
+    $(document).on('click', '.btn-addVotingOption', App.handleAddVotingOption)
+    $(document).on('click', '.btn-getVotingOptions', App.handleGetVotingOptions)
   },
 
  handleDonate: function(event) {
@@ -148,7 +151,81 @@ web3 = new Web3(App.web3Provider);
     console.log(err.message);
   });
 });
-  }
+  },
+
+
+   handleAddVotingOption: function(event) {
+     //if this method is called, the default action of the event will not be triggered
+     event.preventDefault();
+     // var causeName = parseInt($(event.target).data('id'));
+     // var causeAddress = parseInt($(event.target).data('id'));
+     var name=document.getElementById("name").value;
+     var pk= "\"" + document.getElementById("pk").value + "\"";
+     console.log(name);
+     console.log(pk);
+     document.getElementById("name").value = "";
+     document.getElementById("pk").value = "";
+
+
+     var votingInstance;
+
+     //use web3 to get the user's accounts:
+    web3.eth.getAccounts(function(error, accounts) {
+       if (error) {
+         console.log(error);
+       }
+
+       var account = accounts[0]; //how to refer to the user account
+
+       App.contracts.Charity.deployed().then(function(instance) {
+         votingInstance = instance;
+         // Execute voting as a transaction by sending account
+         votingInstance.addVoteOption(name, pk);
+       }).then(function(result) {
+         console.log("Success!!!!!!!!!");
+       }).catch(function(err) {
+         console.log(err.message);
+       });
+    });
+   },
+
+
+    handleGetVotingOptions: function(event) {
+      //if this method is called, the default action of the event will not be triggered
+      event.preventDefault();
+      var votingInstance;
+
+      //use web3 to get the user's accounts:
+     web3.eth.getAccounts(function(error, accounts) {
+        if (error) {
+          console.log(error);
+        }
+
+        var account = accounts[0]; //how to refer to the user account
+
+        App.contracts.Charity.deployed().then(function(instance) {
+          votingInstance = instance;
+          // Execute voting as a transaction by sending account
+          votingInstance.votingOptionsCount().then(function(result) {
+            console.log("in" + result['c'][0]);
+
+            $("#votingOptionsList").text("");
+            console.log("asdf'd");
+            for (i = 0; i < result['c'][0]; i++) {
+              console.log("in - " + result['c'][0] + " - " + i);
+              votingInstance.getVotingOption(i).then(function(result) {
+                console.log("inner inner " + i);
+                $("#votingOptionsList").html($("#votingOptionsList").html() + result[0] + ", " + result[1] + "<br/>");
+              });
+            }
+          });
+        }).then(function(result) {
+        console.log("Success!");
+        }).catch(function(err) {
+          console.log(err.message);
+        });
+     });
+    }
 
 };
 

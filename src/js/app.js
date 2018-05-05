@@ -8,24 +8,29 @@ App = {
       var causesRow = $('#causesRow');
       var causeTemplate = $('#causeTemplate');
 
-      for (i = 0; i < data.length; i++) {
-        console.log(data[i].name);
-
+      for (var i = 0; i < data.length; i++) {
         causeTemplate.find('.panel-title').text(data[i].name);
         causeTemplate.find('img').attr('src', data[i].picture);
         causeTemplate.find('.location').text(data[i].location);
         causeTemplate.find('.description').text(data[i].description);
-
         causesRow.append(causeTemplate.html());
       }
-       // window.localStorage.clear();
-       var obj = JSON.parse(localStorage.getItem('myStorage'));
+       //window.localStorage.clear();
+
+       var arr=[];
+
+       if(localStorage.getItem('myStorage') !== null) {
+
+       arr = JSON.parse(localStorage.getItem('myStorage')).data;
+       for(var i = 0; i < arr.length; i++) {
+       var obj = arr[i];
        causeTemplate.find('.panel-title').text(obj.name);
        causeTemplate.find('img').attr('src', obj.picture);
        causeTemplate.find('.location').text(obj.location);
        causeTemplate.find('.description').text(obj.description);
-        causesRow.append(causeTemplate.html());
-
+       causesRow.append(causeTemplate.html());
+      }
+}
 
     });
 
@@ -206,16 +211,25 @@ App = {
      var image = document.getElementById("file").value;
      var des = document.getElementById("des").value;
 
-     var object = {
-       "id": 4,
+     var cause= {
        "name": name,
        "picture": image,
        "location": location,
        "description": des
      }
 
+     var arr=[];
+     var obj = localStorage.getItem('myStorage');//obj is a string
 
-     localStorage.setItem('myStorage', JSON.stringify(object));
+     if(obj) {
+    //if the key 'myStorage' exists, get the data array
+       arr = JSON.parse(obj).data;
+
+     }
+
+     arr.push(cause); //add new cause to the array
+     var newobj = {data: arr}; //new JSON object
+     localStorage.setItem('myStorage', JSON.stringify(newobj));
 
 
      document.getElementById("name").value = "";

@@ -326,6 +326,7 @@ App = {
       votingInstance = instance;
       votingInstance.addVoteOption("LovePanda", 0x92015c09275f6eb2ac347a84f01e9d0147dd15e5);
       votingInstance.addVoteOption("HeartBeat", 0x7849ffda2c0bc921d875251a69a69c9653366c00);
+      votingInstance.addVoteOption("Save Stray Pets", 0x78232ed742b95E8d82eaA0A14Dd1EC10cAC49241);
       votingInstance.addVoteOption("VAD", 0x852df30ae98e7a95edc5bb268f27ccbf40f1d1ff);
     }).catch(function(err) {
       console.log(err.message);

@@ -25,3 +25,6 @@ To play with the decentralized charity:
 3. Switch account to Donor and go to Donate & Voting for a Cause. After donating, you will see Your donations change.
 4. Switch account to Admin and click on Disperse.
 5. Now the balance in your Charity account should increase.
+
+## Demo
+https://youtu.be/6kTc5qxHOlU
